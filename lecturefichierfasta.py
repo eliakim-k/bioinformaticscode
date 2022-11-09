@@ -6,6 +6,10 @@ def lit_fasta(nom_fichier):
     with open(nom_fichier, "r") as lecture:
         lines_list = lecture.readlines()
     return lines_list, nom_fichier
+""" La fonction lit_fasta renvoie un tuple contenant le nom du fichier
+    et une liste de toutes les lignes du fichier fasta
+    * Pour récupérer les éléments du tuple, j'utilise ma méthode tuple[i] avec i l'indice
+    """
 #Récuperer le nom du fichier à partir du terminal
 if len(sys.argv) != 2:
 	sys.exit('Error! Exactly two arguments required.')
@@ -15,13 +19,18 @@ if os.path.exists('lecturefichierfasta.py'):
     tuple_rendu = lit_fasta(nom_fichier_glo)
     sequence = tuple_rendu[0]
 
+    """" La méthode .split() me permet de couper la première chaîne de caractère (sequence[0])
+         La liste qui en découle me permet de récupérer la tranche d'éléments en indices [1:3]
+         La méthode "".join() permet de transformer la sous-liste obtenu par la méthode .split()
+         en une chaine de caractère simple
+    """
     nom_seq_list = sequence[0].split()[1:3]
     nom_seq_str = " ".join(nom_seq_list)
 
     longueur_seq = 0
     for line in sequence:
-        if ">" not in line:
-            longueur_seq += len(line)
+        if ">" not in line:             #Dans un fichier fasta, toute ligne qui commence par ">" est dediée
+            longueur_seq += len(line)   #à la description de la séquence et ne peut pas être compté et lu comme faisant partie de ladite séquence    
     nombre_codon = round(longueur_seq / 3)
 
     print()
