@@ -1,3 +1,6 @@
+import sys
+import os
+
 """When using a if-clause in a function and a variable to iterate upon 
     --> either all the block of script will fall under the if-clause including the initialization var = 0 and its final value (case 1 below)
     --> or the initialization and the final value will be outside the if-clause (case 2 below)
@@ -14,7 +17,7 @@ def dist_hamming(A, B):
     else:
         print("Please ensure the lenghts of the two sequence entered are identical !")
 
-"""case 2:"""
+""" case 2:
 def dist_hamming(A, B):
     dist = 0        #My variable "dist" is outside the if-clause
     if len(A) == len(B):        
@@ -24,16 +27,31 @@ def dist_hamming(A, B):
     else:
         print("Please ensure the lenghts of the two sequence entered are identical !")
     distance = dist  #Again, my variable is outside the if-clause
-    return distance
+    return distance"""
 
-seq_1 = "AGWPSGGASAGLAIL"
-seq_2 = "IGWPSAGASAGLWIL"
-seq_3 = "ATTCATACGTTACGATT"
-seq_4 = "ATACTTACGTAACCATT."
+def lit_genbank(filename):
+    with open(filename, "r") as gbk_in:
+        lines = gbk_in.readlines()
+        flag = True
+        sequence = ""
+        for line in lines:
+            if "ORIGIN" in line:    #Technique pour demander à Python de lire tout ce qui vient après ligne contenant "ORIGIN"
+                flag = True
+            if flag == True:
+                sequence += line[11:76]
+            if "//" in line:
+                flag = False
+    return sequence
 
-hamm_1_2 = dist_hamming(seq_1, seq_2)
-hamm_3_4 = dist_hamming(seq_3, seq_4)
-print(
-"La distance de hamming entre les séquences 1 et 2 est {}\n \
-    La distance de hamming entre les séquences 3 et 4 est {}".format(hamm_1_2, hamm_3_4)
-)
+#Récuperer le nom du fichier à partir du terminal
+if len(sys.argv) != 3:
+	sys.exit('Error! Exactly three arguments required.')
+else:
+	file_1, file_2 = sys.argv[1], sys.argv[2]
+if os.path.exists('read_genbankfiles.py'):
+    seq_1 = lit_genbank(file_1)
+    seq_2 = lit_genbank(file_2)
+    hamm_1_2 = dist_hamming(seq_1, seq_2)
+    print("La distance de hamming entre les séquences 1 et 2 est {}".format(hamm_1_2))
+else:
+    sys.exit("At least one of the files is not avalaible on the disk !")
