@@ -15,7 +15,7 @@ we did not instruct Python to change this value otherwise (via the else-clause t
 def lit_genbank(filename):
     with open(filename, "r") as gbk_in:
         lines = gbk_in.readlines()
-        flag = True
+        flag = False
         sequence = ""
         for line in lines:
             if "ORIGIN" in line:    #Technique pour demander à Python de lire tout ce qui vient après ligne contenant "ORIGIN"
