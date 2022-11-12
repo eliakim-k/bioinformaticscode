@@ -49,7 +49,7 @@ def eucl_dist_capha(pdbfile):
         distancefile_written.write("CA_prev CA_flwing Distance\n")
         for m in range(len(list_dist_eucl)):
             distancefile_written.write("{:<6d}{:<6d}{:>6.2f}\n".format(list_dist_eucl[m][0],list_dist_eucl[m][1],list_dist_eucl[m][2]))
-        distancefile_written.write("    Moyenne {:>6.2f}\n".format(mean))
+        distancefile_written.write("    Mean {:>6.2f}\n".format(mean))
     with open("distance_calpha.dat","r") as distancefile_read:
         dist_lines = distancefile_read.readlines()
         for dist_line in dist_lines:
