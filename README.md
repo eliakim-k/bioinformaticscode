@@ -33,3 +33,10 @@ This script calculates the hamming distance between two sequences. The Hamming d
 This file reads genbank files and renders the sequence of nucleotides.
 -> The syntax is the same as above :
     > python read_genbankfiles.py name_genbank_file.gbk
+
+#5 c_alpha_distance_pdb.py
+
+This file computes the distance between consecutive c_alpha carbons in a PDB file.
+The calculation results are printed on screen with a head containg the column titles and a bottom line (containg the mean of distances).
+-> The syntax is the same as above :
+    > python c_alpha_distance_pdb.py pdb_file_name.pdb
