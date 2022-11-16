@@ -40,3 +40,11 @@ This file computes the distance between consecutive c_alpha carbons in a PDB fil
 The calculation results are printed on screen with a head containg the column titles and a bottom line (containg the mean of distances).
 -> The syntax is the same as above :
     > python c_alpha_distance_pdb.py pdb_file_name.pdb
+
+#6 pdb_protein_center_of_gravity.py
+
+This script computes and displays a protein's center of graivity as an approximation of the barycenter of its C_alpha carbones.
+
+Syntax:
+    >python pdb_protein_center_of_gravity.py pdb_file_name.pdb
+Note : The two files must be in the folder from with you are lauching python. Otherwise, an error will appear.
