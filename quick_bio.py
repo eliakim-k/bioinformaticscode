@@ -2,6 +2,8 @@
 
 import collections
 from math import sqrt
+import math
+
 
 
 def pdb_finds_calpha(filename):
@@ -15,7 +17,9 @@ def pdb_finds_calpha(filename):
     -------
     list
         a list of dictionnaries of the following kind :
-        {'resid': int, 'x': float, 'y': float, 'z': float}. 
+        {'resid': int, 'x': float, 'y': float, 'z': float} where
+        resid is the residue number and x y z the cartesian coordinates
+        of the corresponding alpha carbon.
     """
 
     with open(filename, "r") as pdbfile_in:
@@ -267,3 +271,60 @@ def reads_fasta(filename):
     sequence_char = "".join(sequence_list)
     return sequence_char
 
+
+def pdb_eucl_dist_consec_capha(pdbfile):
+    """ This function computes the euclidian distance
+        between consecutive alpha carbons from a pdb file.
+    
+    Parameter
+    ---------
+    pdbfile : string
+        pdb filename
+    Returns
+    -------
+    list
+        a list of three-element tuples of this kind :
+        (atom number j, atom number j+1, euclidian distance)
+    Nota Bene:
+              The function automatically prints the results as well.
+    """
+
+    # Extraction of C alpha coordinates from pdf file
+    calpha_list = pdb_finds_calpha(pdbfile)
+    list_coords = []
+    for i in range(len(calpha_list)):
+        record = calpha_list[i]
+        num_ca = int(record["resid"])
+        x = float(record["x"])
+        y = float(record["y"])
+        z = float(record["z"])
+        list_coords += [(num_ca, x, y, z)]
+    # Consecutive alpha carbons are identified by j and j+1 index
+    # Calculation of the euclidian distance between consecutive alpha carbons
+    list_dist_eucl = []
+    for j in range(len(list_coords)-1):
+        num_1 = list_coords[j][0]
+        num_2 = list_coords[j+1][0]
+        a = list_coords[j][1] - list_coords[j+1][1]
+        b = list_coords[j][2] - list_coords[j+1][2]
+        c = list_coords[j][3] - list_coords[j+1][3]
+        dist_eucl = math.sqrt(a**2+b**2+c**2)
+        list_dist_eucl += [(num_1, num_2, dist_eucl)]
+    # Computing the mean alpha carbons distance
+    mean = 0
+    for i in range(len(list_dist_eucl)):
+        mean += list_dist_eucl[i][2] / len(list_dist_eucl)
+    # Writing the results in a .dat file
+    with open("distance_calpha.dat","w") as distancefile_written:
+        distancefile_written.write("CA_prev CA_flwing Distance\n")
+        for m in range(len(list_dist_eucl)):
+            distancefile_written.write("{:<6d}\t  {:<6d} {:>6.2f}\n".format(
+                list_dist_eucl[m][0],list_dist_eucl[m][1],
+                list_dist_eucl[m][2]))
+        distancefile_written.write("\tMean\t\t {:>6.2f}\n".format(mean))
+    # Reading the data for display and return
+    with open("distance_calpha.dat","r") as distancefile_read:
+        dist_lines = distancefile_read.readlines()
+        for dist_line in dist_lines:
+            print(dist_line.strip())
+    return list_dist_eucl
