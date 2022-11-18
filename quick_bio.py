@@ -1,9 +1,18 @@
-""" This module contains funtions for bio informatics. """
+""" This module contains funtions for bio informatics.
+
+Usage:
+    import the module in your main program and call the functions.
+"""
+
+__author__ = ("Eliakim M. Kambale")
+__contact__ = ("eliakim.kambale@unikin.ac.cd")
+__copyright__ = "CC-BY-NC"
+__date__ = "2022/11/18"
+__version__ = "1.0.0"
 
 import collections
 from math import sqrt
 import math
-
 
 
 def pdb_finds_calpha(filename):
