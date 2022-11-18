@@ -41,10 +41,24 @@ The calculation results are printed on screen with a head containg the column ti
 -> The syntax is the same as above :
     > python c_alpha_distance_pdb.py pdb_file_name.pdb
 
-#6 pdb_protein_center_of_gravity.py
+#6 gbk_gene_counter.py
+
+This script helps count the number of genes in a genbank file.
+Syntax:
+     > python gbk_gene_counter.py genbank_file_name.gbk
+Note : The two files must be in the folder from with you are lauching python. Otherwise, an error will appear.
+
+#7 pdb_protein_center_of_gravity.py
 
 This script computes and displays a protein's center of graivity as an approximation of the barycenter of its C_alpha carbones.
 
 Syntax:
     >python pdb_protein_center_of_gravity.py pdb_file_name.pdb
 Note : The two files must be in the folder from with you are lauching python. Otherwise, an error will appear.
+
+#8 quick_bio.py
+
+This file is a collection of the above functions. Imported as a module, it gives access to the above functions.
+In a main program:
+    import quick_bio
+    quick_bio.function_name(argument)
