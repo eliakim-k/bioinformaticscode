@@ -1,18 +1,20 @@
 """ This module contains funtions for bio informatics.
 
-Usage:
-    import the module in your main program and call the functions.
+Use:
+    import the module in your main program and use help()
+    to find out more about the functions.
 """
 
 __author__ = ("Eliakim M. Kambale")
 __contact__ = ("eliakim.kambale@unikin.ac.cd")
-__copyright__ = "CC-BY-NC"
+__copyright__ = "CC-BY-SA-NC"
 __date__ = "2022/11/18"
 __version__ = "1.0.0"
 
 import collections
 from math import sqrt
 import math
+import re
 
 
 def pdb_finds_calpha(filename):
@@ -337,3 +339,98 @@ def pdb_eucl_dist_consec_capha(pdbfile):
         for dist_line in dist_lines:
             print(dist_line.strip())
     return list_dist_eucl
+
+
+def pdb_finds_c_alpha_regex(pdbfilename):
+    """ This function uses regular expressions to find CA coordinates.
+    
+    Parameter
+    ---------
+    pdbfilename : string
+        a pdb filename
+    returns
+    -------
+    list
+        a list of four-element dictionaries of this kind
+        {"resid": int, "x": float, "y": float, "z": float} in which
+        'resid' represents the residue number and 'x' 'y' 'z' the cartesian
+        coordinates of the corresponding alpha carbon.
+    Nota Bene:
+              The function generates a 'ca_coordinates_pdb_file.dat'
+              file for any necessary use.
+
+        """
+    # Defining the regular expression
+    regex = re.compile(".[0-9]+\.[0-9]+")
+    # Reading and selecting the CA in a pdb file
+    with open(pdbfilename, "r") as file_in:
+        # Building the list of CA lines from the pdb file
+        c_alpha_list = [
+            line for line in file_in.readlines() 
+            if line[13:17].strip() == "CA"]
+        # Identifying and extracting the regex (here the x y z coordinates)
+        coords_list = []
+        for line in c_alpha_list:
+            coords = regex.findall(line)    # Finding the regex in a CA line
+            dico_coords = {"resid": int(line[23:28].strip()),
+             "x": float(coords[0]), "y": float(coords[1]), 
+             "z": float(coords[2])}         # Extracting it from the list : coords[index]
+            coords_list.append(dico_coords) # Adding dicos to a list
+    # Writing the coordinates in a '.dat' file
+    with open("ca_coordinates_pdb_file.dat", "w") as file_out:
+        for record in coords_list:
+            (resid, x, y, z) = (record["resid"], record["x"], 
+            record["y"], record["z"])
+            file_out.write(f"{resid}\t\t{x:>7.3f}\t\t{y:>7.3f}\t\t{z:>7.3f}\n")
+    return coords_list
+
+
+def gbk_gene_count_regex(genbank_file):
+    """ This function uses regular expressions to count genes
+        in a genbank file.
+
+    Parameter
+    ---------
+    genbank_file : string
+        a genbank filename
+    Returns
+    -------
+    list
+        a list of five-element tuples of this kind
+        (gene count -> int, startbase count -> int,
+            endbase count -> int, gene location -> str, base count -> int)
+    Nota Bene:
+              The function generates a 'gene_count_file.txt' file containg
+              these four columns for any necessary disposition.
+    """
+    # Creating regex
+    regex_gene = re.compile("gene")
+    # The group 'complement\(' is putative (thus the use of '?')
+    # Notice '\' before '(' character to escape creating another group
+    regex_base = re.compile("(complement\()?<?([0-9]+)\.\.>?([0-9]+)")
+    # Reading a .gbk file and writing a .txt file
+    with open(genbank_file,"r") as gbk_file_in, \
+        open("gene_count_file.txt", "w") as file_out:
+        gene_list = []
+        i = 0
+        for line in gbk_file_in.readlines():
+            # The target line is the one containg both of these patterns
+            if regex_gene.search(line) and regex_base.search(line):
+                i += 1
+                result = regex_base.search(line)
+                groupe_1 = result.group(1)
+                startbase = int(result.group(2))
+                endbase = int(result.group(3))
+                if groupe_1 == "complement(":
+                    location = "complement"
+                    gene_list.append((i, startbase, endbase, location, endbase-startbase+1))
+                    file_out.write(
+                        f"{i:<4d}\t{startbase:>7d} \t {endbase:>7d} \t {location:<7s}\t{endbase-startbase+1:>7d}\n")
+                else:
+                    location = "direct"
+                    gene_list.append((i, startbase, endbase, location, endbase-startbase+1))
+                    file_out.write(
+                        f"{i:<4d}\t{startbase:>7d} \t {endbase:>7d} \t {location:<7s}\t{endbase-startbase+1:>7d}\n")  
+    return gene_list
+
+

@@ -58,7 +58,16 @@ Note : The two files must be in the folder from with you are lauching python. Ot
 
 #8 quick_bio.py
 
-This file is a collection of the above functions. Imported as a module, it gives access to the above functions.
+This file is a collection of the above functions. Imported as a module, it gives access to the above functions. The help() function in shell will help access documentation on functions.
 In a main program:
     import quick_bio
     quick_bio.function_name(argument)
+
+#9 csv_readers.py
+
+This script reads csv files and returns a dataframe printing it on screen. 
+Use: (in shell)
+    > python csv_readers.py csv_file_name.csv
+    The user is asked to choose from three functions. Once done, the results are
+    printed on screen.
+For details on functions, import csv_readers as a module and apply the function help().
