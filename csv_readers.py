@@ -140,7 +140,6 @@ def csv_to_d_frame_through_np_arrays(csv_filename):
             heads.append((i, heading_list[i]))
         heads_copy = copy.deepcopy(heads)
         head_dict = dict(heads)
-        file_out.write(f'{head_dict}')
         # Writing data in .dat file (making CSV a TSV)
         for line in lines[1:]:
             list_line = line.strip().split(",")
@@ -164,35 +163,61 @@ def csv_to_d_frame_through_np_arrays(csv_filename):
     return d_frame
 
 
+def default_function(csv_filename):
+    """ This function reads csv file with pandas module.
+    
+    Parameter
+    ---------
+    csv_filename : str
+        The csv filename
+    Returns
+    ------
+    dataframe
+        A pandas dataframe
+    Nota :
+          The function also prints the results on screen.
+    """
+    
+    d_frame_0 = pd.read_csv(csv_filename, dtype=str)
+    print(d_frame_0)
+    return d_frame_0
+
+
+def switch(num_function, csv_file_name):
+    """ This function switches between three functions to read a csv file.
+    
+    Parameter
+    ---------
+    num_function : int
+        The function number in dictionary (must be specified for the user
+        with a prompt from the input() built-in function
+    csv_file_name : str
+        The csv file name to be read
+    Returns
+    -------
+    function
+        The function corresponding to the user's choice is actually executed.
+    """
+    
+    switcher = {1: csv_to_d_frame_through_csv_module,\
+                2: csv_to_d_frame_through_pd_series,\
+                3: csv_to_d_frame_through_np_arrays}
+    return switcher.get(num_function, default_function)(csv_file_name)
+
+
 if __name__ == "__main__":
-    choice = input("Choose the function :\n\
+    if len(sys.argv) != 2:
+            sys.exit("Two str args required !")
+    if os.path.exists("csv_readers.py"):
+        csv_file = str(sys.argv[1])
+        choice = int(input("Choose the function :\n\
         1. csv_to_d_frame_through_csv_module()\n\
         2. csv_to_d_frame_through_pd_series()\n\
         3. csv_to_d_frame_through_np_arrays()\n\
-        > ")
-    if int(choice) == 1:
-        if len(sys.argv) != 2:
-            sys.exit("Two str args required !")
-        if os.path.exists("csv_readers.py"):
-            file = str(sys.argv[1])
-            csv_to_d_frame_through_csv_module(file)
-        else:
-            sys.exit("Source file 'csv_readers.py' missing.")
-    elif int(choice) == 2:
-        if len(sys.argv) != 2:
-            sys.exit("Two str args required !")
-        if os.path.exists("csv_readers.py"):
-            file = str(sys.argv[1])
-            csv_to_d_frame_through_pd_series(file)
-        else:
-            sys.exit("Source file 'csv_readers.py' missing.")
-    elif int(choice) == 3:
-        if len(sys.argv) != 2:
-            sys.exit("Two str args required !")
-        if os.path.exists("csv_readers.py"):
-            file = str(sys.argv[1])
-            csv_to_d_frame_through_np_arrays(file)
-        else:
-            sys.exit("Source file 'csv_readers.py' missing.")
+        > "))        
+        switch(choice, csv_file)
+    else:
+        sys.exit("No 'csv_readers.py' file in directory !")
+        
 
 
