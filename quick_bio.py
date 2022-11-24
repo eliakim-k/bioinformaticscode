@@ -14,6 +14,7 @@ __version__ = "1.0.0"
 import collections
 from math import sqrt
 import math
+import numpy as np
 import re
 
 
@@ -433,4 +434,71 @@ def gbk_gene_count_regex(genbank_file):
                         f"{i:<4d}\t{startbase:>7d} \t {endbase:>7d} \t {location:<7s}\t{endbase-startbase+1:>7d}\n")  
     return gene_list
 
+
+def pdb_c_alpha_retriver(pdf_filename):
+    """ This function searches CA in a pdb file.
+
+    Parameter
+    ----------
+    filename : string
+        a pdb filename
+    Returns
+    -------
+    list
+        a list of x y z the cartesian coordinates
+        of the corresponding alpha carbon.
+    """
+    
+    with open(pdf_filename, 'r', encoding='utf-8') as filein_1,\
+        open('c_alpha_coords.dat', 'w', encoding='utf-8') as fileout:
+        lines = filein_1.readlines()
+        for line in lines:
+            if line.startswith('ATOM') and line[12:16].strip() == 'CA':
+                #coords = re.findall(' (\-?[0-9]+\.[0-9]+) ', line)
+                #x_coord, y_coord, z_coord = coords[0], coords[1], coords[2]
+                x_coord, y_coord, z_coord = line[31:39].strip(), \
+                    line[40:47].strip(), line[48:56].strip()
+                fileout.write(f"{x_coord}\t{y_coord}\t{z_coord}\t")
+    with open('c_alpha_coords.dat', 'r', encoding='utf-8') as filein_2:
+        list_coords_str = filein_2.read().strip().split('\t')
+        list_coords_fl = [float(i) for i in list_coords_str]
+    return list_coords_fl
+
+
+def pdb_eucl_dist_consec_calpha_arrays(pdb_filename):
+    """ This function computes the euclidian distance
+        between consecutive alpha carbons from a pdb file.
+        It builds upon the numpy module arrays.
+    
+    Parameter
+    ---------
+    pdbfile : string
+        pdb filename
+    Returns
+    -------
+    None
+    Nota Bene:
+              The function automatically prints the results as well.
+              it produces a 'c_alpha_consec_dist.dat' file containg
+              the results of calculations.
+    """
+    
+    list_coords_fl = pdb_c_alpha_retriver(pdb_filename)
+    rows = int(len(list_coords_fl)/3)
+    structure_array = np.array(list_coords_fl)
+    structure_matrix = np.reshape(structure_array, (rows,3))
+    matrix_firsts = structure_matrix[:-1]
+    matrix_lasts = structure_matrix[1:]
+    print(f"CA num\t\tDist")
+    with open('c_alpha_consec_dist.dat', 'w', encoding='utf-8') as fileout:
+        fileout.write(f"CA num\t Dist\n")
+        for i in range(rows-1):
+            x_1, y_1, z_1 = matrix_firsts[i][0], matrix_firsts[i][1],\
+                matrix_firsts[i][2]
+            x_2, y_2, z_2 = matrix_lasts[i][0], matrix_lasts[i][1], \
+                matrix_lasts[i][2]
+            a, b, c = (x_1-x_2)**2, (y_1-y_2)**2, (z_1-z_2)**2
+            eucl_dist = math.sqrt(a+b+c)
+            fileout.write(f"{i+1} - {i+2}\t{eucl_dist:>7.3f}\n")
+            print(f"CA {i+1} - {i+2}\t{eucl_dist:>7.3f}")
 
