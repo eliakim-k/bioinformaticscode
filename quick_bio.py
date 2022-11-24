@@ -8,8 +8,8 @@ Use:
 __author__ = ("Eliakim M. Kambale")
 __contact__ = ("eliakim.kambale@unikin.ac.cd")
 __copyright__ = "CC-BY-SA-NC"
-__date__ = "2022/11/18"
-__version__ = "1.0.0"
+__date__ = "2022/11/24"
+__version__ = "1.0.1"
 
 import collections
 from math import sqrt
