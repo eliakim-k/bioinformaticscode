@@ -71,3 +71,14 @@ Use: (in shell)
     The user is asked to choose from three functions. Once done, the results are
     printed on screen.
 For details on functions, import csv_readers as a module and apply the function help().
+
+#10 words_in_protein_sequence.py
+This script checks whether a word is in the protein sequence.
+
+Use: (in shell)
+    >python words_in_protein_sequence words_filename.txt sequence_filename.fasta
+
+#11 gbk_to_fasta_converter.py
+This script converts genbank format to fasta format.
+Use: (in shell)
+    >python gbk_to_fasta_converter.py genbank_filename.gbk

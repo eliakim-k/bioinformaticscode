@@ -9,6 +9,7 @@ from typing import Literal
 __author__: Literal['Eliakim M. Kambale'] = "Eliakim M. Kambale"
 __contact__: Literal['emkthegeek@gmail.com'] = "emkthegeek@gmail.com"
 __license__: Literal['CC-BY-SA-NC'] = "CC-BY-SA-NC"
+__date__: Literal["08-12-2022"] = "08-12-2022"
 __version__: Literal['1.0.0'] = "1.0.0"
 
 
