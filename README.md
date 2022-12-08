@@ -82,3 +82,10 @@ Use: (in shell)
 This script converts genbank format to fasta format.
 Use: (in shell)
     >python gbk_to_fasta_converter.py genbank_filename.gbk
+
+#12 gbk_to_fasta_converter_regex.py
+This script converts genbank format to fasta format
+    utilizing regular expressions.
+
+Use: (in shell)
+    >python gbk_to_fasta_converter_regex.py gbk_filename.gbk
